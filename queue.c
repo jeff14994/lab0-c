@@ -148,7 +148,20 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 {
     /* TODO: You need to fix up this code. */
     /* TODO: Remove the above comment when you are about to implement. */
+    if (q == NULL || q->head == NULL) {
+        return false;
+    }
+    list_ele_t *tmp = q->head;
+    // If sp is not NULL copy the string to sp
+    if (sp != NULL) {
+        snprintf(sp, sizeof(bufsize), "%s", tmp->value);
+    }
+    // Update head to next node
     q->head = q->head->next;
+    free(tmp->value);
+    free(tmp);
+    // Minus one in aize
+    q->size--;
     return true;
 }
 
