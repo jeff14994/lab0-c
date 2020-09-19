@@ -30,12 +30,12 @@ void q_free(queue_t *q)
     /* Free queue structure */
     if (q == NULL)
         return;
-    list_ele_t *tmp = q->head;
+    // if head exists, we keep on searching
     while (q->head) {
+        list_ele_t *tmp = q->head;
         q->head = q->head->next;
-        tmp->next = NULL;
+        free(tmp->value);
         free(tmp);
-        tmp = q->head;
     }
     free(q);
 }
