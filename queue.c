@@ -31,7 +31,9 @@ void q_free(queue_t *q)
     if (q == NULL)
         return;
     // if head exists, we keep on searching
+
     while (q->head) {
+        // Update tmp by head
         list_ele_t *tmp = q->head;
         q->head = q->head->next;
         free(tmp->value);
@@ -49,13 +51,39 @@ void q_free(queue_t *q)
  */
 bool q_insert_head(queue_t *q, char *s)
 {
-    list_ele_t *newh;
     /* TODO: What should you do if the q is NULL? */
-    newh = malloc(sizeof(list_ele_t));
-    /* Don't forget to allocate space for the string and copy it */
     /* What if either call to malloc returns NULL? */
+    if (q == NULL) {
+        return false;
+    }
+
+    // New head to be allocated memory
+    list_ele_t *newh;
+    newh = malloc(sizeof(list_ele_t));
+    if (newh == NULL) {
+        return false;
+    }
+
+    /* Don't forget to allocate space for the string and copy it */
+    // Allocate space for string to checok
+    int length = strlen(s) + 1;
+    newh->value = malloc(sizeof(char) * (length));
+    if (newh->value == NULL) {
+        free(newh);
+        return false;
+    }
+    // Copy from the source to the newly allocated space
+    strncpy(newh->value, s, length);
+
     newh->next = q->head;
+    // Move head in front of newh
     q->head = newh;
+    // If No any element
+    if (q->tail == NULL) {
+        q->tail = newh;
+    }
+    // Queue size grows, thus plus one
+    q->size++;
     return true;
 }
 
@@ -70,7 +98,42 @@ bool q_insert_tail(queue_t *q, char *s)
 {
     /* TODO: You need to write the complete code for this function */
     /* Remember: It should operate in O(1) time */
-    return false;
+    if (q == NULL) {
+        return false;
+    }
+
+    // New head to be allocated memory
+    list_ele_t *newt;  // newt represents new tail
+    newt = malloc(sizeof(list_ele_t));
+    if (newt == NULL) {
+        return false;
+    }
+
+    /* Don't forget to allocate space for the string and copy it */
+    // Allocate space for string to checok
+    int length = strlen(s) + 1;
+    newt->value = malloc(sizeof(char) * (length));
+    if (newt->value == NULL) {
+        free(newt);
+        return false;
+    }
+    // Copy from the source to the newly allocated space
+    strncpy(newt->value, s, length);
+    // Set this element to the last one
+    newt->next = NULL;
+    // See if the queue is empty or not. If yes, the head is the new tail, if
+    // not, put the new tail in the next of the original tail
+    if (q->size == 0) {
+        q->head = newt;
+    } else {
+        q->tail->next = newt;
+    }
+    // Move q->tail to newt
+    q->tail = newt;
+
+    // Queue size grows, thus plus one
+    q->size++;
+    return true;
 }
 
 /*
