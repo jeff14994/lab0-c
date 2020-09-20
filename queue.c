@@ -193,6 +193,30 @@ void q_reverse(queue_t *q)
 {
     /* TODO: You need to write the code for this function */
     /* TODO: Remove the above comment when you are about to implement. */
+    if (q == NULL || q->head == NULL) {
+        return;
+    }
+
+    list_ele_t *curr = q->head;
+    list_ele_t *prev = NULL;
+    q->tail->next = q->head;
+
+    // See if q->head exists, if yes, than keep going
+    while (q->head) {
+        // get next node
+        list_ele_t *next = q->head->next;
+        // Change the head->next to previous node
+        q->head->next = prev;
+
+        // Update prev pointer
+        prev = q->head;
+        // Update q->head to next node
+        q->head = next;
+    }
+    // Update head to tail
+    q->head = q->tail;
+    // Update tail to head
+    q->tail = curr;
 }
 
 /*
